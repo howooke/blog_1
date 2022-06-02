@@ -2,18 +2,22 @@ const express = require("express")
 const Articles = require("../schemas/articles")
 const router = express.Router()
 const moment = require("moment")
+const authMiddleware = require("./auth-middleware")
 
+// router.get("/", (req,res)=> {
+//     res.send('api page')
+// })
 
-router.get("/", (req,res)=> {
-    res.send('api page')
-})
+// router.get("/login", (req, res)=> {
+//     res.send('login page')
+// })
 
 
 //게시글 조회
 router.get("/articles", async (req, res)=> {
-    const {articleId,title,name,date} = req.query
+    const {articleId,title,name,date} = req.body
 
-    const articles = await Articles.find({ articleId,title,name,date },{ articleId: 1, title: 1, name:1, date:1}).sort({ date:-1 })
+    const articles = await Articles.find().sort({ date : -1})
 
     res.json({
         articles
@@ -21,10 +25,10 @@ router.get("/articles", async (req, res)=> {
 })
 
 //상세조회
-router.get("/articles/:name", async (req, res)=> {
-    const {name} = req.params
+router.get("/articles/:articleId", async (req, res)=> {
+    const {articleId} = req.params
 
-    const [detail] = await Articles.find({ name })
+    const [detail] = await Articles.find({ articleId })
 
     res.json({
         detail
@@ -32,26 +36,26 @@ router.get("/articles/:name", async (req, res)=> {
 })
 
 //게시글 삭제
-router.delete("/articles/:name", async (req, res)=> {
-    const { name } = req.params
+router.delete("/articles/:articleId", authMiddleware, async (req, res)=> {
+    const { articleId } = req.params
     const { password } = req.body
 
-    const deleteArticle = await Articles.find({ name })
+    const deleteArticle = await Articles.find({ articleId })
 
-    if (!password) {
-        res.status(400).json({
-            errorMessage: "패스워드가 없습니다."
-        })
-        return
-    }
-    if (password !== deleteArticle[0].password){
-        res.status(400).json({
-            errorMessage: "패스워드가 틀립니다."
-        })
-        return
-    }
+    // if (!password) {
+    //     res.status(400).json({
+    //         errorMessage: "패스워드가 없습니다."
+    //     })
+    //     return
+    // }
+    // if (password !== deleteArticle[0].password){
+    //     res.status(400).json({
+    //         errorMessage: "패스워드가 틀립니다."
+    //     })
+    //     return
+    // }
     if (deleteArticle.length) {
-        await Articles.deleteOne({ name })
+        await Articles.deleteOne({ articleId })
     }
 
     res.json({ success: true })
@@ -60,29 +64,29 @@ router.delete("/articles/:name", async (req, res)=> {
 
 //게시글 수정
 
-router.put("/articles/:name", async (req, res)=> {
-    const { name } = req.params
-    const { password } = req.body
+router.put("/articles/:articleId",authMiddleware, async (req, res)=> {
+    const { articleId } = req.params
+    // const { password } = req.body
     const { title } = req.body
     const { text } = req.body
 
-    const articlesPut = await Articles.find({ name })
+    const articlesPut = await Articles.find({ articleId })
 
-    if (!password) {
-        res.status(400).json({
-            errorMessage: "패스워드가 없습니다."
-        })
-        return
-    }
-    if (password !== articlesPut[0].password){
-        res.status(400).json({
-            errorMessage: "패스워드가 틀립니다."
-        })
-        return
-    }
+    // if (!password) {
+    //     res.status(400).json({
+    //         errorMessage: "패스워드가 없습니다."
+    //     })
+    //     return
+    // }
+    // if (password !== articlesPut[0].password){
+    //     res.status(400).json({
+    //         errorMessage: "패스워드가 틀립니다."
+    //     })
+    //     return
+    // }
     if (articlesPut.length) {
-        await Articles.updateOne({ name }, {$set: { title }})
-        await Articles.updateOne({ name }, {$set: { text }})
+        await Articles.updateOne({ articleId }, {$set: { title }})
+        await Articles.updateOne({ articleId }, {$set: { text }})
     }
 
     res.json({ success: true })
@@ -93,8 +97,8 @@ router.put("/articles/:name", async (req, res)=> {
 
 
 // 게시글 작성
-router.post("/articles", async (req, res)=> {
-    const {articleId, title, name, password, text} = req.body
+router.post("/articles",authMiddleware, async (req, res)=> {
+    const {articleId, title, nickname, text} = req.body
     const date = moment().add('9','h').format('YYYY-MM-DD HH:mm:ss')
 
     const articles = await Articles.find({articleId})
@@ -102,14 +106,14 @@ router.post("/articles", async (req, res)=> {
         return res.status(400).json({ success: false, errorMessage: "이미 있는 데이터 입니다." })
     }
 
-    if (!password) {
-        res.status(400).json({
-            errorMessage: "패스워드를 입력하세요."
-        })
-        return
-    }
+    // if (!password) {
+    //     res.status(400).json({
+    //         errorMessage: "패스워드를 입력하세요."
+    //     })
+    //     return
+    // }
 
-    const createdArticles = Articles.create({ articleId, title, name, password, text, date })
+    const createdArticles = await Articles.create({ articleId, title, nickname,  text, date })
 
 
     res.json({articles: createdArticles})

@@ -1,12 +1,24 @@
 const express = require("express")
-const connect = require("./schemas")   //  /index   인덱스는 생략가능
+const mongoose = require("mongoose")
+const jwt = require("jsonwebtoken")
+const User = require("./schemas/user")
+
 const app = express()
 const port = 3000
 
+mongoose.connect("mongodb://localhost:27017/blod_1", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
 
-connect()
+
 
 const articleRouter = require("./routes/articles")
+const usersRouter = require("./routes/users")
+const commentsRouter = require("./routes/comments")
+const authMiddleware = require("./routes/auth-middleware")
 
 
 const requestMiddleware = (req, res, next)=> {
@@ -19,13 +31,20 @@ app.use(requestMiddleware)
 
 
 
+app.use("/api", express.urlencoded({ extended: false }), [articleRouter, usersRouter, commentsRouter, authMiddleware])
 
-app.use("/api", [articleRouter])       //api를 붙여주고 [articleRouter]를 소환
 
-app.get("/", (req, res)=> {         //얘가 루트
+app.get("/", (req, res)=> {
     res.send("/root  page!")
 })
 
 app.listen(port, ()=> {
     console.log(port, "포트로 서버가 켜짐!")
 })
+
+
+
+module.exports = app;
+
+
+

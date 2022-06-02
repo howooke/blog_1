@@ -1,12 +1,22 @@
-const mongoose = require("mongoose")
+// const mongoose = require("mongoose")
 
-const connect = () => {
-    mongoose.connect("mongodb+srv://test:sparta@cluster0.hlswz.mongodb.net/?retryWrites=true&w=majority",{ignoreUndefined: true}).catch((err) => {
-        // mongodb+srv://test:sparta@cluster0.hlswz.mongodb.net/?retryWrites=true&w=majority
-        // mongodb://localhost:27017/blod_1
-        console.error(err)
-    })
-}
+// const connect = () => {
+//     mongoose.connect("mongodb://localhost:27017/blod_1",{
+//         ignoreUndefined: true,
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true,
+//     })
+//         .catch(err => console.log(err))
+// }
 
-module.exports = connect
+// mongoose.connection.on("error", err=> {
+//     console.error("몽고디비 연결 에러", err)
+// })
 
+// module.exports = connect
+ 
+
+
+
+// // mongodb+srv://test:sparta@cluster0.hlswz.mongodb.net/?retryWrites=true&w=majority
+// // mongodb://localhost:27017/blod_1

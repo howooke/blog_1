@@ -12,17 +12,13 @@ const articleSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    name: {
+    nickname: {
         type: String,
         required: true,
         unique: true,
     },
     date: {
         type: Date,
-    },
-    password: {
-        type: Number,
-        required: true,
     },
     text: {
         type: String,
@@ -36,9 +32,8 @@ module.exports = mongoose.model("Articles",articleSchema)
 
 //포스트용
 // {
-//     "articleId": 3,
-//     "title": "가자3",
-//     "name": "이호욱3",
-//     "password": 1234,
+//     "articleId": 5,
+//     "title": "가자",
+//     "nickname": "이호욱5",
 //     "text": "Hello World!!!!!"
 // }
