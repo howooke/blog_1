@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const commentSchema = new mongoose.Schema({
     articleId: {
         type: Number,
+        required: true,
     },
     commentId: {
         type: Number,

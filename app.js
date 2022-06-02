@@ -6,13 +6,14 @@ const User = require("./schemas/user")
 const app = express()
 const port = 3000
 
-mongoose.connect("mongodb://localhost:27017/blod_1", {
+mongoose.connect("mongodb+srv://test:sparta@cluster0.hlswz.mongodb.net/?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
-
+// // mongodb+srv://test:sparta@cluster0.hlswz.mongodb.net/?retryWrites=true&w=majority
+// // mongodb://localhost:27017/blod_1
 
 
 const articleRouter = require("./routes/articles")
