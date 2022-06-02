@@ -7,7 +7,6 @@ const commentSchema = new mongoose.Schema({
     },
     commentId: {
         type: Number,
-        required: true,
     },
     nickname: {
         type: String,

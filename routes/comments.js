@@ -24,6 +24,8 @@ router.get("/comments/:articleId", async (req,res)=> {
 //댓글 작성
 router.post("/comments", authMiddleware, async (req,res)=> {
     try {
+        const { user } = res.locals
+        
         const maxCommentId = await Comment.findOne().sort("-commentId").exec()
         let commentId = 1
         if (maxCommentId) {
@@ -33,7 +35,7 @@ router.post("/comments", authMiddleware, async (req,res)=> {
         const postComment = await Comment.create({          //다른 때와 같이 맨위줄에 req.body로 불러오지 않고 아래에 작성한 이유는 let commentId 까지 선언하면 변수가 두번선언되어서 오류
             articleId: req.body.articleId,
             commentId: commentId,               //위에 commentId에 조건식을 따라야하기때문에 이렇게 작성한다.
-            nickname:req.body.nickname,
+            nickname:user.nickname,             //미들웨어에 인증받은 user의 닉네임을 불러온다.
             comment:req.body.comment,
         })
 

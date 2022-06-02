@@ -13,11 +13,11 @@ module.exports = (req, res, next)=> {
     }
 
     try {
-        const { userId } = jwt.verify(tokenValue, "whi-secret-key") //tokenValue랑 시크릿키를 jwt 검증을 해서 userId로 대입해보고
+        const { userId } = jwt.verify(tokenValue, "whi-secret-key")
 
-        User.findById(userId).exec().then((user)=> {    //db에 userId를 실행해서 user가 res.locals.user = user면 진행
-            res.locals.user = user      //res.locals.user 라는 객체에 jwt.verify(검증된) user 값을 넣어놓고 편하게 locals.user만 불러와 사용할것임)
-            next()                  //즉 locals.user는 jwt검증이 되있는것, 불러다 쓰기만 하면됨.
+        User.findById(userId).exec().then((user)=> {
+            res.locals.user = user
+            next()
         })
     } catch (error) {
         res.status(401).send({

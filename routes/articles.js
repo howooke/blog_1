@@ -4,9 +4,9 @@ const router = express.Router()
 const moment = require("moment")
 const authMiddleware = require("./auth-middleware")
 
-// router.get("/", (req,res)=> {
-//     res.send('api page')
-// })
+router.get("/", (req,res)=> {
+    res.send('api page')
+})
 
 // router.get("/login", (req, res)=> {
 //     res.send('login page')
